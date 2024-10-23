@@ -5,7 +5,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
+  const MainScreen({super.key});
 
   @override
   _MainScreenState createState() => _MainScreenState();
@@ -30,9 +30,10 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
   // List of pages
-  static const List<Widget> _pages = [
-    HomePage(),
-    NewsPage(),
+  static final List<Widget> _pages = [
+    const HomePage(),
+    const NewsPage(),
+    const ShopScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -69,7 +70,7 @@ class _MainScreenState extends State<MainScreen> {
 
 // Home Page
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -80,8 +81,8 @@ class HomePage extends StatelessWidget {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              "Thu 27 JULY",
+            const Text(
+              "Thursday, 27 July 2024",
               style: TextStyle(color: Colors.teal),
             ),
             Row(
@@ -90,7 +91,7 @@ class HomePage extends StatelessWidget {
                   icon: const Icon(Icons.notifications, color: Colors.teal),
                   onPressed: () {},
                 ),
-                CircleAvatar(
+                const CircleAvatar(
                   backgroundImage: NetworkImage(
                     'https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg',
                   ),
@@ -103,23 +104,22 @@ class HomePage extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         children: [
-          // Welcome section
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: Colors.teal,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Row(
+            child: const Row(
               children: [
                 CircleAvatar(
                   backgroundImage: NetworkImage(
                       'https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg'),
                 ),
-                const SizedBox(width: 16),
+                SizedBox(width: 16),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text(
                       'Hi, Mr. Alex',
                       style: TextStyle(
@@ -140,24 +140,26 @@ class HomePage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          // Category buttons
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               categoryButton("All"),
               categoryButton("Donate"),
               categoryButton("News", onPressed: () {
-                // Switch to NewsPage when the "News" button is clicked
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const NewsPage()),
                 );
               }),
-              categoryButton("Plant Cart"),
+              categoryButton("Cart", onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ShopScreen()),
+                );
+              }),
             ],
           ),
           const SizedBox(height: 16),
-          // Featured image
           Container(
             height: 180,
             decoration: BoxDecoration(
@@ -169,8 +171,8 @@ class HomePage extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             ),
-            child: Stack(
-              children: const [
+            child: const Stack(
+              children: [
                 Positioned(
                   bottom: 16,
                   left: 16,
@@ -254,7 +256,10 @@ class HomePage extends StatelessWidget {
               borderRadius: BorderRadius.circular(30),
             ),
           ),
-          child: const Text("Plant"),
+          child: const Text(
+            "Plant",
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       ],
     );
@@ -278,9 +283,9 @@ class HomePage extends StatelessWidget {
   }
 }
 
-// News Page with a card layout
+// News Page
 class NewsPage extends StatelessWidget {
-  const NewsPage({Key? key}) : super(key: key);
+  const NewsPage({super.key});
 
   final List<Map<String, String>> newsData = const [
     {
@@ -339,12 +344,12 @@ class NewsPage extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         title: Container(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
             color: Colors.grey[200],
             borderRadius: BorderRadius.circular(30),
           ),
-          child: TextField(
+          child: const TextField(
             decoration: InputDecoration(
               border: InputBorder.none,
               hintText: 'Search',
@@ -417,5 +422,366 @@ class NewsPage extends StatelessWidget {
         },
       ),
     );
+  }
+}
+
+class ShopScreen extends StatefulWidget {
+  const ShopScreen({super.key});
+
+  @override
+  _ShopScreenState createState() => _ShopScreenState();
+}
+
+class _ShopScreenState extends State<ShopScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  String searchText = "";
+  bool isPopularSelected = true; // Toggle between Popular and Newest
+
+  final List<Map<String, String>> products = [
+    {'title': 'VerdeWaves - Defend', 'price': '\$20'},
+    {'title': 'PalmaZen - Woodland Bracelet', 'price': '\$10'},
+    {'title': 'ExcluZen Wooden Earrings', 'price': '\$15'},
+    {'title': 'TimberForge Wooden Ring', 'price': '\$40'},
+    {'title': 'Stone Shimmer Ring', 'price': '\$15'},
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Thu 27 JULY',
+          style: TextStyle(
+            color: Colors.teal, // Ubah warna teks di sini
+          ),
+        ),
+        actions: [
+          IconButton(icon: const Icon(Icons.notifications), onPressed: () {}),
+          const CircleAvatar(
+            backgroundImage: NetworkImage(
+                'https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg'),
+          ),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "We have prepared new product for you",
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.teal),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _searchController,
+              onChanged: (value) {
+                setState(() {
+                  searchText = value;
+                });
+              },
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                hintText: 'Search',
+                prefixIcon: IconButton(
+                  icon: const Icon(Icons.search),
+                  onPressed: () {
+                    setState(() {
+                      searchText = _searchController.text;
+                    });
+                  },
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      isPopularSelected = true;
+                    });
+                  },
+                  child: Text(
+                    'Popular',
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: isPopularSelected ? Colors.teal : Colors.grey),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      isPopularSelected = false;
+                    });
+                  },
+                  child: Text(
+                    'Newest',
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: !isPopularSelected ? Colors.teal : Colors.grey),
+                  ),
+                ),
+              ],
+            ),
+            Expanded(
+              child: GridView.count(
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                children: products
+                    .where((product) => product['title']!
+                        .toLowerCase()
+                        .contains(searchText.toLowerCase()))
+                    .map((product) => ProductCard(
+                          title: product['title']!,
+                          price: product['price']!,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ProductDetailScreen(
+                                        title: product['title']!,
+                                        price: product['price']!,
+                                      )),
+                            );
+                          },
+                        ))
+                    .toList(),
+              ),
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart),
+            label: 'Shop',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: 'Wishlist',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ProductCard extends StatelessWidget {
+  final String title;
+  final String price;
+  final VoidCallback onTap;
+
+  const ProductCard(
+      {super.key,
+      required this.title,
+      required this.price,
+      required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Image.network(
+                'https://example.com/image.jpg',
+                fit: BoxFit.cover,
+                width: double.infinity,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                title,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Text(
+                price,
+                style: const TextStyle(color: Colors.green),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ProductDetailScreen extends StatelessWidget {
+  final String title;
+  final String price;
+
+  const ProductDetailScreen(
+      {super.key, required this.title, required this.price});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.favorite_border),
+            onPressed: () {},
+          ),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Image.network('https://example.com/bracelet.jpg',
+                width: double.infinity, height: 200, fit: BoxFit.cover),
+            const SizedBox(height: 16),
+            Text(
+              title,
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Introducing the "$title" – a unique and captivating accessory...',
+              style: const TextStyle(fontSize: 16),
+            ),
+            const Spacer(),
+            Row(
+              children: [
+                Text(price,
+                    style: const TextStyle(
+                        fontSize: 24, fontWeight: FontWeight.bold)),
+                const Spacer(),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const CartScreen()));
+                  },
+                  child: const Text('Add to cart'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CartScreen extends StatelessWidget {
+  const CartScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Cart'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            ListTile(
+              leading: Image.network('https://example.com/bracelet.jpg',
+                  width: 50, height: 50),
+              title: const Text('PalmaZen Woodland Bracelet'),
+              subtitle: const Text('\$10'),
+              trailing:
+                  IconButton(icon: const Icon(Icons.delete), onPressed: () {}),
+            ),
+            const Spacer(),
+            const Row(
+              children: [
+                Text('Total:',
+                    style:
+                        TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                Spacer(),
+                Text('\$10',
+                    style:
+                        TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+              ],
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => CheckoutScreen()));
+              },
+              child: const Text('Go to Checkout'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CheckoutScreen extends StatelessWidget {
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+
+  CheckoutScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Ship & Pay'),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              TextField(
+                controller: _firstNameController,
+                decoration: const InputDecoration(labelText: 'First name'),
+              ),
+              TextField(
+                controller: _lastNameController,
+                decoration: const InputDecoration(labelText: 'Last name'),
+              ),
+              DropdownButtonFormField<String>(
+                items: ['Private person'].map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (value) {},
+                decoration: const InputDecoration(labelText: 'Shipping'),
+              ),
+              TextField(
+                controller: _emailController,
+                decoration: const InputDecoration(labelText: 'Email'),
+              ),
+              const Spacer(),
+              ElevatedButton(
+                onPressed: () {
+                  // Add payment action here
+                },
+                child: const Text('Place order'),
+              ),
+            ],
+          ),
+        ));
   }
 }
